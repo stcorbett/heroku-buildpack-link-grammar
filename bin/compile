@@ -7,10 +7,10 @@ cd $1
 # add environment variables to .profile.d
 mkdir -p /app/.profile.d
 cat <<EOT >> /app/.profile.d/link-grammar.sh
-  PATH="$PATH:/app/vendor/link-grammar/bin"
-  PKG_CONFIG_PATH="$PKG_CONFIG_PATH:/app/vendor/link-grammar/lib/pkgconfig"
-  LD_LIBRARY_PATH="$LD_LIBRARY_PATH:/app/vendor/link-grammar/lib"
-  LD_LIBRARY_PATH="$LD_LIBRARY_PATH:/app/vendor/link-grammar/share/link-grammar"
+  export PATH="$PATH:/app/vendor/link-grammar/bin"
+  export PKG_CONFIG_PATH="$PKG_CONFIG_PATH:/app/vendor/link-grammar/lib/pkgconfig"
+  export LD_LIBRARY_PATH="$LD_LIBRARY_PATH:/app/vendor/link-grammar/lib"
+  export LD_LIBRARY_PATH="$LD_LIBRARY_PATH:/app/vendor/link-grammar/share/link-grammar"
 
   echo "-----> link-grammar path variables set"
 EOT
