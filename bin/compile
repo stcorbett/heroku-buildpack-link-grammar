@@ -1,30 +1,29 @@
 #!/usr/bin/env bash
 echo "-----> Installing link-grammar"
+
 # change to the the BUILD_DIR ($1)
 cd $1
+
+# add environment variables to .profile.d
+mkdir -p /app/.profile.d
+cat <<EOT >> /app/.profile.d/link-grammar.sh
+  PATH="$PATH:/app/vendor/link-grammar/bin"
+  PKG_CONFIG_PATH="$PKG_CONFIG_PATH:/app/vendor/link-grammar/lib/pkgconfig"
+  LD_LIBRARY_PATH="$LD_LIBRARY_PATH:/app/vendor/link-grammar/lib"
+  LD_LIBRARY_PATH="$LD_LIBRARY_PATH:/app/vendor/link-grammar/share/link-grammar"
+EOT
+
+source /app/.profile.d/link-grammar.sh
+
 # download the binary (-O) silently (-s)
 curl https://raw.githubusercontent.com/stcorbett/link-grammar-binary/master/link-grammar-heroku.tar.gz --output link-grammar-heroku.tar.gz
+
 # make a directory to untar (like unzip) the binary
 mkdir -p vendor/link-grammar
+
 # untar the binary to the directory we want
 tar -C vendor/link-grammar -xvf link-grammar-heroku.tar.gz
-
-# add the location of the binary and the package config to the needed paths
-export PATH="$PATH:/app/vendor/link-grammar/bin"
-export PKG_CONFIG_PATH="$PKG_CONFIG_PATH:/app/vendor/link-grammar/lib/pkgconfig"
-export LD_LIBRARY_PATH="$LD_LIBRARY_PATH:/app/vendor/link-grammar/lib"
-export LD_LIBRARY_PATH="$LD_LIBRARY_PATH:/app/vendor/link-grammar/share/link-grammar"
-
-# extra path variables which could be implicated down the line
-# export CPPPATH="$path/include:$CPPPATH"
-# export CPATH="$path/include:$CPATH"
-# export LIBRARY_PATH="$path/lib:$LIBRARY_PATH"
 
 # link the english dictionary files into the root of the app so link-parser can find them
 ln -s vendor/link-grammar/share/link-grammar/en/ en
 
-mkdir -p /app/.profile.d
-echo 'PATH="$PATH:/app/vendor/link-grammar/bin"' > /app/.profile.d/link-grammar.sh
-echo 'PKG_CONFIG_PATH="$PKG_CONFIG_PATH:/app/vendor/link-grammar/lib/pkgconfig"' > /app/.profile.d/link-grammar.sh
-echo 'LD_LIBRARY_PATH="$LD_LIBRARY_PATH:/app/vendor/link-grammar/lib"' > /app/.profile.d/link-grammar.sh
-echo 'LD_LIBRARY_PATH="$LD_LIBRARY_PATH:/app/vendor/link-grammar/share/link-grammar"' > /app/.profile.d/link-grammar.sh
