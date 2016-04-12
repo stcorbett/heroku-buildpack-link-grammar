@@ -9,8 +9,8 @@ mkdir -p /app/.profile.d
 cat <<EOT >> /app/.profile.d/link-grammar.sh
   export PATH="$PATH:/app/vendor/link-grammar/bin"
   export PKG_CONFIG_PATH="$PKG_CONFIG_PATH:/app/vendor/link-grammar/lib/pkgconfig"
-  export LD_LIBRARY_PATH="$LD_LIBRARY_PATH:/app/vendor/link-grammar/lib"
-  export LD_LIBRARY_PATH="$LD_LIBRARY_PATH:/app/vendor/link-grammar/share/link-grammar"
+  LD_LIBRARY_PATH="/app/vendor/link-grammar/lib:/app/vendor/link-grammar/share/link-grammar"
+  export LD_LIBRARY_PATH
 
   echo "-----> link-grammar path variables set"
 EOT
@@ -18,7 +18,7 @@ EOT
 source /app/.profile.d/link-grammar.sh
 
 # download the binary (-O) silently (-s)
-curl https://raw.githubusercontent.com/stcorbett/link-grammar-binary/master/link-grammar-heroku.tar.gz --output link-grammar-heroku.tar.gz
+curl -s https://raw.githubusercontent.com/stcorbett/link-grammar-binary/master/link-grammar-heroku.tar.gz --output link-grammar-heroku.tar.gz
 
 # make a directory to untar (like unzip) the binary
 mkdir -p vendor/link-grammar
@@ -29,3 +29,14 @@ tar -C vendor/link-grammar -xf link-grammar-heroku.tar.gz
 # link the english dictionary files into the root of the app so link-parser can find them
 ln -s vendor/link-grammar/share/link-grammar/en/ en
 
+
+
+# export PATH="$PATH:/app/vendor/link-grammar/bin"
+# export PKG_CONFIG_PATH="$PKG_CONFIG_PATH:/app/vendor/link-grammar/lib/pkgconfig"
+# export LD_LIBRARY_PATH="$LD_LIBRARY_PATH:/app/vendor/link-grammar/lib"
+# export LD_LIBRARY_PATH="$LD_LIBRARY_PATH:/app/vendor/link-grammar/share/link-grammar"
+
+# extra path variables which could be implicated down the line
+# export CPPPATH="$path/include:$CPPPATH"
+# export CPATH="$path/include:$CPATH"
+# export LIBRARY_PATH="$path/lib:$LIBRARY_PATH"
