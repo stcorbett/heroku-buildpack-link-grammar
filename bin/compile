@@ -30,7 +30,7 @@ tar -C vendor/link-grammar -xf link-grammar-heroku.tar.gz
 ln -s vendor/link-grammar/share/link-grammar/en/ en
 
 echo $PKG_CONFIG_PATH
-gem install 'linkparser'
+gem install 'linkparser' -- --with-pkg-config=/app/vendor/link-grammar/lib/pkgconfig/link-grammar.pc
 
 # export PATH="$PATH:/app/vendor/link-grammar/bin"
 # export PKG_CONFIG_PATH="$PKG_CONFIG_PATH:/app/vendor/link-grammar/lib/pkgconfig"
