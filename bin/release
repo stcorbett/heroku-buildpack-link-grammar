@@ -3,4 +3,5 @@ cat << EOF
 ---
 config_vars:
 PATH: $PATH:/app/vendor/link-grammar/bin
+PKG_CONFIG_PATH: $PKG_CONFIG_PATH:/app/vendor/link-grammar/bin
 EOF
