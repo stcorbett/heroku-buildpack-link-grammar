@@ -1,9 +1,9 @@
 #!/usr/bin/env bash
-echo "-----&gt; Installing link-grammar"
+echo "----->; Installing link-grammar"
 # change to the the BUILD_DIR ($1)
 cd $1
 # download the binary (-O) silently (-s)
-curl https://raw.githubusercontent.com/stcorbett/link-grammar-binary/master/link-grammar-heroku.tar.gz -s -O -ssl3
+curl https://raw.githubusercontent.com/stcorbett/link-grammar-binary/master/link-grammar-heroku.tar.gz --output link-grammar-heroku.tar.gz
 # make a directory to untar (like unzip) the binary
 mkdir -p vendor/link-grammar
 # untar the binary to the directory we want
