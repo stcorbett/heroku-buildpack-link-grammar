@@ -23,7 +23,7 @@ export LD_LIBRARY_PATH="$LD_LIBRARY_PATH:/app/vendor/link-grammar/share/link-gra
 # link the english dictionary files into the root of the app so link-parser can find them
 ln -s vendor/link-grammar/share/link-grammar/en/ en
 
-mkdir -p $build/.profile.d
+mkdir -p /app/.profile.d
 echo 'PATH="$PATH:/app/vendor/link-grammar/bin"' > $build/.profile.d/go.sh
 echo 'PKG_CONFIG_PATH="$PKG_CONFIG_PATH:/app/vendor/link-grammar/lib/pkgconfig"' > $build/.profile.d/go.sh
 echo 'LD_LIBRARY_PATH="$LD_LIBRARY_PATH:/app/vendor/link-grammar/lib"' > $build/.profile.d/go.sh
