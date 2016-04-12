@@ -9,9 +9,16 @@ mkdir -p vendor/link-grammar
 # untar the binary to the directory we want
 tar -C vendor/link-grammar -xvf link-grammar-heroku.tar.gz
 
-export CPPPATH="$path/include:$CPPPATH"
-export CPATH="$path/include:$CPATH"
-export LIBRARY_PATH="$path/lib:$LIBRARY_PATH"
+# add the location of the binary and the package config to the needed paths
 export PATH="$PATH:/app/vendor/link-grammar/bin"
+export PKG_CONFIG_PATH="$PKG_CONFIG_PATH:/app/vendor/link-grammar/lib/pkgconfig"
 
+# extra path variables which could be implicated down the line
+# export CPPPATH="$path/include:$CPPPATH"
+# export CPATH="$path/include:$CPATH"
+# export LIBRARY_PATH="$path/lib:$LIBRARY_PATH"
+# export LD_LIBRARY_PATH="$LD_LIBRARY_PATH:/app/vendor/link-grammar/lib"
+# export LD_LIBRARY_PATH="$LD_LIBRARY_PATH:/app/vendor/link-grammar/share/link-grammar"
+
+# link the english dictionary files into the root of the app so link-parser can find them
 ln -s vendor/link-grammar/share/link-grammar/en/ en
