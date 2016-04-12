@@ -12,7 +12,7 @@ cat <<EOT >> /app/.profile.d/link-grammar.sh
   LD_LIBRARY_PATH="/app/vendor/link-grammar/lib:/app/vendor/link-grammar/share/link-grammar"
   export LD_LIBRARY_PATH
 
-  echo "-----> link-grammar path variables set"
+  echo "       link-grammar path variables set"
 EOT
 
 source /app/.profile.d/link-grammar.sh
@@ -29,7 +29,7 @@ tar -C vendor/link-grammar -xf link-grammar-heroku.tar.gz
 # link the english dictionary files into the root of the app so link-parser can find them
 ln -s vendor/link-grammar/share/link-grammar/en/ en
 
-echo $PKG_CONFIG_PATH
+echo "       pkg_config_path: $PKG_CONFIG_PATH"
 # gem install 'linkparser'
 
 # export PATH="$PATH:/app/vendor/link-grammar/bin"
