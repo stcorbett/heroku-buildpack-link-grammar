@@ -22,7 +22,7 @@ curl https://raw.githubusercontent.com/stcorbett/link-grammar-binary/master/link
 mkdir -p vendor/link-grammar
 
 # untar the binary to the directory we want
-tar -C vendor/link-grammar -xvf link-grammar-heroku.tar.gz
+tar -C vendor/link-grammar -xf link-grammar-heroku.tar.gz
 
 # link the english dictionary files into the root of the app so link-parser can find them
 ln -s vendor/link-grammar/share/link-grammar/en/ en
