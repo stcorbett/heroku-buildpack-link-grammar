@@ -49,7 +49,7 @@ if [ ! -f $CACHE_FILE ]; then
   mv $REL_INSTALL_DIR.tar.gz $CACHE_FILE
 
 else
-  cache exists, extract it
+  # cache exists, extract it
   echo "-----> Extracting link-grammar $CACHE_FILE => $VENDOR_DIR"
   tar xzf $CACHE_FILE -C $VENDOR_DIR
 fi
@@ -61,8 +61,7 @@ ACTUAL_INSTALL_PATH="$HOME/vendor/link-grammar"
 mkdir -p $(dirname $PROFILE_PATH)
 echo "export PATH=$ACTUAL_INSTALL_PATH/bin:\$PATH" >> $PROFILE_PATH
 echo "export LD_LIBRARY_PATH=$ACTUAL_INSTALL_PATH/lib:$ACTUAL_INSTALL_PATH/share/link-grammar:\$LD_LIBRARY_PATH" >> $PROFILE_PATH
-
-ln -s "$ACTUAL_INSTALL_PATH/share/link-grammar/en"/ en
+echo "ln -s $ACTUAL_INSTALL_PATH/share/link-grammar/en en" >> $PROFILE_PATH
 
 # need to symlink dictionary?
 # PKG_CONFIG_PATH is not set, does that matter?
