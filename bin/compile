@@ -1,42 +1,63 @@
-#!/usr/bin/env bash
-echo "-----> Installing link-grammar"
+indent() {
+  sed -u 's/^/       /'
+}
 
-# change to the the BUILD_DIR ($1)
-cd $1
+echo "-----> Install LinkParser"
 
-# add environment variables to .profile.d
-mkdir -p /app/.profile.d
-cat <<EOT >> /app/.profile.d/link-grammar.sh
-  export PATH="$PATH:/app/vendor/link-grammar/bin"
-  export PKG_CONFIG_PATH="/app/vendor/link-grammar/lib/pkgconfig"
-  LD_LIBRARY_PATH="/app/vendor/link-grammar/lib:/app/vendor/link-grammar/share/link-grammar"
-  export LD_LIBRARY_PATH
+BUILD_DIR=$1
+CACHE_DIR=$2
+VENDOR_DIR="$BUILD_DIR/vendor"
+INSTALL_DIR="$VENDOR_DIR/link-grammar"
+CACHE_FILE="$CACHE_DIR/link-grammar.tar.gz"
 
-  echo "       link-grammar path variables set"
-EOT
 
-source /app/.profile.d/link-grammar.sh
+if [ ! -f $CACHE_FILE ]; then
+  # install link grammar
+  http://www.abisource.com/downloads/link-grammar/5.3.4/link-grammar-5.3.4.tar.gz
+  IMAGE_MAGICK_VERSION="5.3.4"
+  IMAGE_MAGICK_FILE="link-grammar-$IMAGE_MAGICK_VERSION.tar.gz"
+  IMAGE_MAGICK_DIR="link-grammar-$IMAGE_MAGICK_VERSION"
+  # SSL cert used on imagemagick not recognized by heroku.
+  IMAGE_MAGICK_URL="http://www.abisource.com/downloads/link-grammar/$IMAGE_MAGICK_VERSION/$IMAGE_MAGICK_FILE"
 
-# download the binary (-O) silently (-s)
-curl -s https://raw.githubusercontent.com/stcorbett/link-grammar-binary/master/link-grammar-heroku.tar.gz --output link-grammar-heroku.tar.gz
+  echo "-----> Downloading ImageMagick from $IMAGE_MAGICK_URL"
+  wget $IMAGE_MAGICK_URL -P $BUILD_DIR | indent
 
-# make a directory to untar (like unzip) the binary
-mkdir -p vendor/link-grammar
+  echo "-----> Extracting ImageMagick from $BUILD_DIR/$IMAGE_MAGICK_FILE"
+  if [ ! -f $BUILD_DIR/$IMAGE_MAGICK_FILE ]; then
+    echo "Error: Unable to download ImageMagick" | indent
+    ls $BUILD_DIR | indent
+    exit 1;
+  fi
+  tar xvf $BUILD_DIR/$IMAGE_MAGICK_FILE | indent
 
-# untar the binary to the directory we want
-tar -C vendor/link-grammar -xf link-grammar-heroku.tar.gz
+  echo "-----> Building ImageMagick"
+  cd $IMAGE_MAGICK_DIR
+  export CPPFLAGS="-I$INSTALL_DIR/include"
+  export LDFLAGS="-L$INSTALL_DIR/lib"
+  # ./configure --prefix=$INSTALL_DIR
+  ./configure --disable-debug --disable-dependency-tracking --disable-java-bindings --prefix=$INSTALL_DIR
+  make && make install
+  cd ..
+  rm -rf $IMAGE_MAGICK_DIR
 
-# link the english dictionary files into the root of the app so link-parser can find them
-ln -s vendor/link-grammar/share/link-grammar/en/ en
+  # cache for future deploys
+  echo "-----> Caching ImageMagick installation"
+  cd $VENDOR_DIR
+  REL_INSTALL_DIR="link-grammar"
+  tar czf $REL_INSTALL_DIR.tar.gz $REL_INSTALL_DIR
+  mv $REL_INSTALL_DIR.tar.gz $CACHE_FILE
 
-# gem install 'linkparser'
+else
+  cache exists, extract it
+  echo "-----> Extracting link-grammar $CACHE_FILE => $VENDOR_DIR"
+  tar xzf $CACHE_FILE -C $VENDOR_DIR
+fi
 
-# export PATH="$PATH:/app/vendor/link-grammar/bin"
-# export PKG_CONFIG_PATH="$PKG_CONFIG_PATH:/app/vendor/link-grammar/lib/pkgconfig"
-# export LD_LIBRARY_PATH="$LD_LIBRARY_PATH:/app/vendor/link-grammar/lib"
-# export LD_LIBRARY_PATH="$LD_LIBRARY_PATH:/app/vendor/link-grammar/share/link-grammar"
-
-# extra path variables which could be implicated down the line
-# export CPPPATH="$path/include:$CPPPATH"
-# export CPATH="$path/include:$CPATH"
-# export LIBRARY_PATH="$path/lib:$LIBRARY_PATH"
+# update PATH and LD_LIBRARY_PATH
+echo "-----> Updating environment variables"
+PROFILE_PATH="$BUILD_DIR/.profile.d/link-grammar.sh"
+ACTUAL_INSTALL_PATH="$HOME/vendor/link-grammar"
+mkdir -p $(dirname $PROFILE_PATH)
+echo "export PATH=$ACTUAL_INSTALL_PATH/bin:\$PATH" >> $PROFILE_PATH
+echo "export LD_LIBRARY_PATH=$ACTUAL_INSTALL_PATH/lib:$ACTUAL_INSTALL_PATH/share/link-grammar:\$LD_LIBRARY_PATH" >> $PROFILE_PATH
