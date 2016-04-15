@@ -65,7 +65,11 @@ echo "export LD_LIBRARY_PATH=$ACTUAL_INSTALL_PATH/lib:$ACTUAL_INSTALL_PATH/share
 
 echo "ln -s $ACTUAL_INSTALL_PATH/share/link-grammar/en en" >> $PROFILE_PATH
 echo "export PKG_CONFIG_PATH=$ACTUAL_INSTALL_PATH/lib/pkgconfig:\$PKG_CONFIG_PATH" >> $PROFILE_PATH
-echo "gem install 'linkparser'" >> $PROFILE_PATH
+
+echo "pwd: "
+pwd
+
+# echo "gem install 'linkparser'" >> $PROFILE_PATH
 
 
 # need to symlink dictionary?
